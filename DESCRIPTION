@@ -1,0 +1,16 @@
+Package: citations
+Type: OpenCPU Application
+Title: citations application for OpenCPU
+Version: 0.2.7
+Date: 2014-11-28
+Author: Robert Badgett, Scott Chamberlain, Jeroen Ooms
+Maintainer: Robert Badgett <rbadgett@kumc.edu>
+Description: OpenCPU application to retrieve PubMed citations and convert to wikimedia format.
+License: GPL
+Imports:
+    httr,
+    RJSONIO,
+    stringr,
+    reshape2
+Collate:
+    'citations.R'

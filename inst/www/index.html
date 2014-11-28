@@ -1,0 +1,116 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<title>Citations OpenCPU application</title>
+
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<meta http-equiv="Content-Type" content="text/html; charset=UTF-8" />
+
+<!-- jquery -->
+<script type="text/javascript" src="jquery/jquery-2.0.3_min.js"></script>
+
+<!-- tooltip -->
+<script type="text/javascript" src="qtip/jquery.qtip.min.js"></script>
+<link rel="stylesheet" type="text/css" href="qtip/jquery.qtip.min.css" />
+
+<!-- ocpu library -->
+<script type="text/javascript" src="opencpu/opencpu.js"></script>
+
+<!-- some optional styling stuff -->
+<script type="text/javascript" src="bootstrap/js/bootstrap.js"></script>
+<script type="text/javascript" src="jqueryui/jquery-ui-1.10.3.custom.js"></script>
+
+<script> 
+    //init this script when the page has loaded
+    $(document).ready(function(){
+
+  //optional, requires jquery-ui.
+  //$("#output").resizable()
+  
+  //button handler
+  $("#plotbutton").on("click", function(e){
+    e.preventDefault();
+    $("#plotbutton").attr("disabled", "disabled")
+
+	//perform the request
+	var req = opencpu.r_fun_json("citations", {
+	pmid : $("#pmid").val(),
+	extra : $("#extra").val()
+	},function(output){
+		$("#output").html(output.message)
+    });req.always(function(){
+		$("#plotbutton").removeAttr("disabled");
+    });req.fail(function(){
+		alert("HTTP error " + req.status + ": " + req.responseText);
+    });
+  });
+  
+  //plot the default values on page load
+  //$("#plotbutton").trigger("click")
+});
+</script>
+    <style>
+      #output{
+         height: 40px;
+        width: 400px;
+        border: 1px solid gray;
+        padding: 3px; 
+      }
+
+</style>
+</head>
+
+<body>
+  <div class="container">
+
+    <div class="page-header">
+      <h1>Citations</h1>
+    </div>
+    
+    <div class="row">
+      <div class="span3">
+
+        <form class="well" id="paramform">
+          <fieldset style="border: 3px solid #6DC6E7; background-color: #FFFFFF;width:400px;">
+            <legend>Request Parameters</legend>
+            <label>PMID(s)</label> 
+            <input class="input-medium" id="pmid" type="text" value="25164526"></input>
+
+            <label>Include extra output such as ACPJC and editorial links</label> 
+            <select class="input-medium" id="extra">
+              <option value="yes" selected>yes</option>
+              <option value="no">no</option>
+            </select> 
+            
+            <br />
+            
+            <button class="btn btn-small btn-primary" id="plotbutton"><i class="icon-ok icon-white"></i>Make citations</button>
+          </fieldset>
+        </form>
+      </div>
+      <div>&nbsp;</div>
+      <div class="span9">
+        <div id="output">Output will be here</div>
+      </div>
+    </div>
+      
+    <div class="row">
+      <div class="span12">
+        <h3>About</h3>
+        <p>This is a simple OpenCPU application. Below some example API's to access the R source code and manual pages.</p>
+        
+        <table class="table table-striped">
+          <tr><th>Resource</th> <th>link</th> <th>API URL</th></tr>
+          <tr><td>Package Info</td> <td><a href=".." target="blank">link</a></td> <td><code>GET /library/package</code></td> </tr>       
+          <tr><td>Package Objects</td><td> <a href="../R" target="blank">link</a></td><td><code>GET /library/package/R</code></td></tr>           
+          <tr><td>Function Source</td><td><a href="../R/citations/print" target="blank">link</a></td><td><code>GET /library/package/R/function/print</code></td></tr>
+          <tr><td>Help Page (txt)</td><td><a href="../man/citations/text" target="blank">link</a></td><td><code>GET /library/package/man/function/text</code></td></tr>   
+          <tr><td>Help Page (html)</td><td><a href="../man/citations/html" target="blank">link</a></td><td><code>GET /library/package/man/function/html</code></td></tr>
+          <tr><td>Help Page (pdf)</td><td><a href="../man/citations/pdf" target="blank">link</a></td><td><code>GET /library/package/man/function/pdf</code></td></tr>          
+        </table>
+               
+      </div>
+    </div>
+  </div>
+</body>
+</html>
